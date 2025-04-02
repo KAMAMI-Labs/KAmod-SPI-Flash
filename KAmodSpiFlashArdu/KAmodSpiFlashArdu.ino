@@ -1,3 +1,6 @@
+//example code for KAmod SPI Flash 1MB (W25Q80)
+//ino board: ESP32-WROOM-DA Module
+
 #include <SPI.h>
 #include "Kamod_SPIFlashBase.h"
 
@@ -10,7 +13,7 @@
 #define SPI_MISO      12
 #define SPI_SCK       14
 #define SPI_CS        15
-#define SPI_CLOCK     4000000
+#define SPI_CLOCK     10000000
 
 //INIT
 SPIClass spiFlashBus(HSPI);
@@ -27,10 +30,12 @@ int result;
 //-------------------------------------------
 void setup() {
   Serial.begin(115200);
-  //while (!Serial) {
-    delay(200); // wait for native usb
-  //}
-  Serial.println("\r\r\rHello. KAmod SPI Flash test start");
+  while (!Serial) {}
+  delay(1000); // wait for native usb
+  Serial.println();
+  Serial.println();
+  Serial.println();
+  Serial.println("Hello. KAmod SPI Flash test start");
 
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, HIGH);
@@ -39,7 +44,8 @@ void setup() {
   retstat = false;
   while(retstat == false){
     spiFlashBus.begin(SPI_SCK, SPI_MISO, SPI_MOSI, SPI_CS);
-    retstat = spiFlashBase.begin(&MY_W25Q80DV); 
+    spiFlashBase.setClockSpeed(SPI_CLOCK, SPI_CLOCK);
+    retstat = spiFlashBase.begin(&MY_W25Q80DV);
     if (!retstat){
       Serial.println("Init fail ");
       delay(1000);
@@ -49,12 +55,13 @@ void setup() {
     }
   }
 
+  Serial.println("Flash init...OK");
   Serial.println("--- First, erase sector ---");
   spiFlashBase.eraseSector(0);
-  delay(1000);
+  delay(500);
   loops = 0;
   result = 0;
-  Serial.println("Flash init...OK");
+
   Serial.println();
 }
 
@@ -131,7 +138,7 @@ void loop() {
   Serial.println();
   Serial.println();
 
-  delay(3000);
+  delay(500);
   loops++;
   if (loops >= 3) {
     if (result == 3) Serial.println("### Verify OK 3 times ###");

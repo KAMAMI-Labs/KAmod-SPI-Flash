@@ -39,7 +39,7 @@ bool Kamod_SPIFlashBase::begin(Kamod_SPIFlash_Device_t *flash_dev) {
   _flash_dev->is_fram = false;
 
   _addr_len = 3;
-  _clock_wr = _clock_rd = (_flash_dev->max_clock_speed_mhz * 1000000UL);
+  //_clock_wr = _clock_rd = (_flash_dev->max_clock_speed_mhz * 1000000UL);
 
   if (_spi == NULL) return false;
 
